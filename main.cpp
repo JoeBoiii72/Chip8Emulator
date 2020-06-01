@@ -1,12 +1,20 @@
 #include <SDL/SDL.h>
 
-int main(int argc, char *argv[]) {
+
+#define WINDOW_NAME "CHIP 8 EMULATOR"
+
+int main(int argc, char *argv[])
+{
     int gogogo = 1;
+
     SDL_Event event;
 
     SDL_Init(SDL_INIT_EVERYTHING);
-    SDL_WM_SetCaption("CHIP 8 EMULATOR", NULL);
+
+    SDL_WM_SetCaption(WINDOW_NAME, NULL);
+
     SDL_SetVideoMode(800, 600, 32, SDL_HWSURFACE);
+
     while (gogogo) {
         SDL_WaitEvent(&event);
         if (event.type == SDL_QUIT)
