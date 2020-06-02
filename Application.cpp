@@ -1,38 +1,16 @@
 #include "Application.h"
 #include <unistd.h>
 
-#define delay SDL_Delay
-#define len(a) (sizeof(a)/sizeof(a[0])) 
-
-const uint8_t controls[16] =
-{
-    SDLK_x,
-    SDLK_1,
-    SDLK_2,
-    SDLK_3,
-    SDLK_q,
-    SDLK_w,
-    SDLK_e,
-    SDLK_a,
-    SDLK_s,
-    SDLK_d,
-    SDLK_z,
-    SDLK_c,
-    SDLK_4,
-    SDLK_r,
-    SDLK_f,
-    SDLK_v,
-};
-
 Application::Application(const char* file)
 {         
+    // lets hope SDL is intialized correctly.
     if ( SDL_Init(SDL_INIT_EVERYTHING) < 0 )
 	{
         printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
         exit(1);
     }   
 
-    SDL_Window* window = SDL_CreateWindow(
+    window = SDL_CreateWindow(
         "CHIP-8 Emulator",
         SDL_WINDOWPOS_UNDEFINED, 
         SDL_WINDOWPOS_UNDEFINED,
@@ -41,27 +19,47 @@ Application::Application(const char* file)
         SDL_WINDOW_SHOWN
     );
 
-	 if(window == NULL)
-	 {
+    // if window couldnt be created, get outta there
+    if(window == NULL)
+    {
         printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError());
         exit(1);
     }    	
 
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, 0);
+    // here where we will draw/render the pixels
+    renderer = SDL_CreateRenderer(window, -1, 0);
 
-	SDL_Event event;
-
-	SDL_Rect pixel;
+    // pixel to draw on screen
 	pixel.w = PIXEL_SIZE;
 	pixel.h = PIXEL_SIZE;
 
-	Chip8 chip8 = Chip8();
+    // create chip8 instance
+	chip8 = Chip8();
 
+    // try and load rom
     if(!chip8.loadROM(file))
 	{
 		printf( "Couldn't load the ROM, try another one!\n");
 		exit(1);
 	}
+
+    // setup controls to be used
+    controls[0]  = SDLK_x;
+    controls[1]  = SDLK_1;
+    controls[2]  = SDLK_2;
+    controls[3]  = SDLK_3;
+    controls[4]  = SDLK_q;
+    controls[5]  = SDLK_w;
+    controls[6]  = SDLK_e;
+    controls[7]  = SDLK_a;
+    controls[8]  = SDLK_s;
+    controls[9]  = SDLK_d;
+    controls[10] = SDLK_z;
+    controls[11] = SDLK_c;
+    controls[12] = SDLK_4;
+    controls[13] = SDLK_r;
+    controls[14] = SDLK_f;
+    controls[15] = SDLK_v;
 }
 
 Application::~Application()
@@ -78,38 +76,7 @@ void Application::loop()
 		update();
 
 		while (SDL_PollEvent(&event))
-		{
-			char keyPressed = event.key.keysym.sym;
-
-			switch(event.type)
-			{
-				case SDL_QUIT:
-					exit(1);
-				
-				// no break statement
-				// i want it to drop down to the for loop
-				case SDL_KEYDOWN:
-				{
-					switch(keyPressed)
-					{
-						// key presses go here
-						case SDLK_ESCAPE:
-							exit(1);
-					}
-				}
-				case SDL_KEYUP  :
-				{
-					for (int i = 0; i < 16; ++i)
-					{
-						if (keyPressed == controls[i])
-						{
-							chip8.key[i] = (event.type == SDL_KEYDOWN) ? 1 : 0;	
-						}	
-					}
-				}
-				break;
-			}
-        }
+			handleEvent();
 
 		// if flag set draw shit
 		if(chip8.drawFlag)
@@ -120,6 +87,40 @@ void Application::loop()
         // this is linux only this shit
         usleep(1200);
 	}
+}
+
+void Application::handleEvent()
+{
+    char keyPressed = event.key.keysym.sym;
+
+    switch(event.type)
+    {
+        case SDL_QUIT:
+            exit(1);
+
+        // no break statement
+        // i want it to drop down to the for loop
+        case SDL_KEYDOWN:
+        {
+            switch(keyPressed)
+            {
+                // key presses go here
+                case SDLK_ESCAPE:
+                    exit(1);
+            }
+        }
+
+        case SDL_KEYUP:
+        {
+            for (int i = 0; i < len(controls); ++i)
+            {
+                if (keyPressed == controls[i])
+                {
+                    chip8.key[i] = (event.type == SDL_KEYDOWN) ? 1 : 0;	
+                }	
+            }
+        }
+    }
 }
 
 // only thing to do here is emulate a cycle
@@ -133,7 +134,7 @@ void Application::draw()
 {
     SDL_RenderClear(renderer);
     chip8.drawFlag = false;
-    for(int i = 0; i < CHIP8_HEIGHT*CHIP8_WIDTH; ++i)
+    for(int i = 0; i < len(chip8.frameBuffer); ++i)
     {
         int x = i % CHIP8_WIDTH;
         int y = i / CHIP8_WIDTH;

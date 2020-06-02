@@ -1,6 +1,5 @@
 #include "Chip8.h"
 #include <random>
-#include <iostream>
 #include "time.h"
 
 #define WIDTH 64
@@ -69,14 +68,14 @@ bool Chip8::loadROM(const char* file)
 {
     initialize();
 
-    printf("loading ROM at : %s", file);
+    printf("[*]loading %s\n", file);
 
     // Open ROM file
     FILE* rom = fopen(file, "rb");
 
     if (rom == NULL)
     {
-        std::cerr << "Oh no! I couldn't open the ROM" << std::endl;
+        printf("[!]Oh no! I couldn't open the ROM\n");
         return false;
     }
 
@@ -91,7 +90,7 @@ bool Chip8::loadROM(const char* file)
     char* rom_buffer = (char*) malloc(sizeof(char) * rom_size);
     if (rom_buffer == NULL)
     {
-        std::cerr << "Failed to allocate memory for ROM" << std::endl;
+        printf("[!]Failed to allocate memory for ROM\n");
         return false;
     }
 
@@ -99,7 +98,7 @@ bool Chip8::loadROM(const char* file)
     size_t result = fread(rom_buffer, sizeof(char), (size_t)rom_size, rom);
     if (result != rom_size)
     {
-        std::cerr << "Failed to read ROM" << std::endl;
+        printf("[!]Failed to read ROM\n");
         return false;
     }
 
@@ -114,7 +113,7 @@ bool Chip8::loadROM(const char* file)
     }
     else
     {
-        std::cerr << "ROM too large to fit in memory" << std::endl;
+        printf("[!]ROM too large to fit in memory\n");
         return false;
     }
 
@@ -122,6 +121,7 @@ bool Chip8::loadROM(const char* file)
     fclose(rom);
     free(rom_buffer);
 
+    printf("[*]ROM loaded successfully!\n");
     return true;
 }
 
@@ -322,7 +322,7 @@ void Chip8::emulateCylce()
 // error time
 void Chip8::unKnownOpcode()
 {
-    printf("\nWhat the fuck, this isn't an opcode: %.4X\n", opcode);
+    printf("[!]What the fuck, this isn't an opcode: %.4X\n", opcode);
     exit(1);
 }
 
