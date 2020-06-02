@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "Chip8.h"
 
 int main( int argc, char* args[] )
 {
