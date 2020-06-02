@@ -1,7 +1,9 @@
+#pragma once
 #include <stdint.h>
 
 class Chip8
 {
+public:
     // chip8 has 4k memory
     uint8_t memory[4096];
 
@@ -41,43 +43,48 @@ class Chip8
     // emulate a cycle
     void emulateCylce();
 
+    bool drawFlag;
+
+    bool loadROM(const char* file);
+
     // op code functions
     // un used
     //void call_0NNN   ();
-    void display_00E0();
-    void flow_00EE   ();
-    void flow_1NNN   ();
-    void flow_2NNN   ();
-    void cond_3XNN   ();
-    void cond_4XNN   ();
-    void cond_5XY0   ();
-    void const_6XNN  ();
-    void const_7XNN  ();
-    void assign_8XY0 ();
-    void bitOp_8XY1  ();
-    void bitOP_8xY2  ();
-    void bitOP_8xY3  ();
-    void math_8XY4   ();
-    void math_8xY5   ();
-    void bitOP_8xY6  ();
-    void math_8XY7   ();
-    void bitOp_8XYE  ();
-    void cond_9XY0   ();
-    void mem_ANNN    ();
-    void flow_BNNN   ();
-    void rand_CXNN   ();
-    void disp_DXYN   ();
-    void keyOp_EX9E  ();
-    void keyOp_EXA1  ();
-    void timer_FX07  ();
-    void keyOp_FX0A  ();
-    void timer_FX15  ();
-    void sound_FX18  ();
-    void mem_FX1E    ();
-    void mem_FX29    ();
-    void bcd_FX33    ();
-    void mem_FX55    ();
-    void mem_FX65    ();
+    void display_00E0 ();
+    void flow_00EE    ();
+    void flow_1NNN    ();
+    void flow_2NNN    ();
+    void cond_3XNN    ();
+    void cond_4XNN    ();
+    void cond_5XY0    ();
+    void const_6XNN   ();
+    void const_7XNN   ();
+    void assign_8XY0  ();
+    void bitOp_8XY1   ();
+    void bitOp_8XY2   ();
+    void bitOp_8XY3   ();
+    void math_8XY4    ();
+    void math_8XY5    ();
+    void bitOp_8XY6   ();
+    void math_8XY7    ();
+    void bitOp_8XYE   ();
+    void cond_9XY0    ();
+    void mem_ANNN     ();
+    void flow_BNNN    ();
+    void rand_CXNN    ();
+    void disp_DXYN    ();
+    void keyOp_EX9E   ();
+    void keyOp_EXA1   ();
+    void timer_FX07   ();
+    void keyOp_FX0A   ();
+    void timer_FX15   ();
+    void sound_FX18   ();
+    void mem_FX1E     ();
+    void mem_FX29     ();
+    void bcd_FX33     ();
+    void mem_FX55     ();
+    void mem_FX65     ();
+    void unKnownOpcode();
 
 
 
