@@ -42,7 +42,8 @@ class Chip8
     void emulateCylce();
 
     // op code functions
-    void call_0NNN   ();
+    // un used
+    //void call_0NNN   ();
     void display_00E0();
     void flow_00EE   ();
     void flow_1NNN   ();

@@ -63,53 +63,220 @@ void Chip8::emulateCylce()
     // opcode is two bytes, so get next two bytes
     opcode = memory[pc] << 8 | memory[pc + 1];
 
-    pc += 2;
-
     // Decode Opcode
-    switch(opcode & 0x000F)
+    // keep only first 4 bits
+    switch(opcode & 0xF000)
     {
         case 0x0000:
-            switch(opcode & 0x000F)
-            {
-                case 0x0000:
-                break;
+        {
+            // check last eight bits
+            switch(opcode & 0x00FF)
+            {  
+                case 0x00E0:
+                    display_00E0();
+                    break;
 
-                case 0x000E:
-                break;          
+                case 0x00EE:
+                    flow_00EE();
+                    break;          
             }
             break;
+        }
 
-        case 0x1000:;
+        case 0x1000:
+        {
+            flow_1NNN();
+            break;
+        }
 
-        case 0x2000:;
+        case 0x2000:
+        {
+            flow_2NNN();
+            break;
+        }
 
-        case 0x3000:;
+        case 0x3000:
+        {
+            cond_3XNN();
+            break;
+        }
 
-        case 0x4000:;
+        case 0x4000:
+        {
+            cond_4XNN();
+            break;
+        }
 
-        case 0x5000:;
+        case 0x5000:
+        {
+            cond_5XY0();
+            break;
+        }
 
-        case 0x6000:;
+        case 0x6000:
+        {
+            const_6XNN();
+            break;
+        }
 
-        case 0x7000:;
+        case 0x7000:
+        {
+            const_7XNN();
+            break;
+        }
 
-        case 0x8000:;
+        case 0x8000:
+        {
+            // check last four bits
+            switch(opcode & 0x000F)
+            {  
+                case 0x0000:
+                    assign_8XY0();
+                    break;
 
-        case 0x9000:;
+                case 0x0001:
+                    bitOp_8XY1();
+                    break;   
 
-        //     ANNN
-        case 0xA000:;
+                case 0x0002:
+                    bitOP_8xY2();
+                    break;   
 
-        case 0xB000:;
+                case 0x0003:
+                    bitOP_8xY3();
+                    break;   
+
+                case 0x0004:
+                    math_8XY4();
+                    break;  
+
+                case 0x0005:
+                    math_8xY5();
+                    break;   
+
+                case 0x0006:
+                    bitOP_8xY6();
+                    break;   
+
+                case 0x0007:
+                    math_8XY7();
+                    break;  
+
+                case 0x000E:
+                    bitOp_8XYE();
+                    break;         
+            }
+            break;
+        }
+
+        case 0x9000:
+        {
+            cond_9XY0();
+            break;
+        }
+
+        case 0xA000:
+        {
+            mem_ANNN();
+            break;
+        }
+
+        case 0xB000:
+        {
+            flow_BNNN();
+            break;
+        }
         
-        //     CNNNN
-        case 0xC000:;
+        case 0xC000:
+        {
+            rand_CXNN();
+        }
 
         case 0xD000:
-        
-        case 0xE000:;
+        {
+            disp_DXYN();
+            break;
+        }
 
-        case 0xF000:;
+        case 0xE000:
+        {
+            // check last eight bits
+            switch(opcode & 0x00FF)
+            {
+                case 0x009E:
+                {
+                    keyOp_EX9E();
+                    break;
+                }
+
+                case 0x00A1:
+                {
+                    keyOp_EXA1();
+                    break;
+                }
+            }
+        }
+
+        case 0xF000:
+        {
+            // check last eight bits
+            switch(opcode & 0x00FF)
+            {
+                case 0x0007:
+                {
+                    timer_FX07();
+                    break;
+                }
+
+                case 0x000A:
+                {
+                    keyOp_FX0A();
+                    break;
+                }
+
+                case 0x0015:
+                {
+                    timer_FX15();
+                    break;
+                }
+
+                case 0x0018:
+                {
+                    sound_FX18();
+                    break;
+                }
+
+                case 0x001E:
+                {
+                    mem_FX1E();
+                    break;
+                }
+
+                case 0x0029:
+                {
+                    mem_FX29();
+                    break;
+                }
+
+                case 0x0033:
+                {
+                    bcd_FX33();
+                    break;
+                }
+
+                case 0x0055:
+                {
+                    mem_FX55();
+                    break;
+                }
+
+                case 0x0065:
+                {
+                    mem_FX65();
+                    break;
+                }
+            }
+        }
 
         
     }
