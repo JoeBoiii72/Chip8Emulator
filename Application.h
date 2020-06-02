@@ -6,15 +6,12 @@
 #define WINDOW_NAME   "CHIP 8 EMULATOR"
 #define CHIP8_WIDTH   64
 #define CHIP8_HEIGHT  32
-#define PIXEL_SIZE    10
-#define WINDOW_WIDTH  CHIP8_WIDTH  * PIXEL_SIZE
-#define WINDOW_HEIGHT CHIP8_HEIGHT * PIXEL_SIZE
 #define len(a) (sizeof(a)/sizeof(a[0])) 
 
 class Application
 {
 public:
-    Application(const char* file);
+    Application(const char* file, int pixelSize);
     ~Application();
     void loop();
 private:
@@ -22,6 +19,7 @@ private:
     void update();
     void draw();
     void handleEvent();
+    int pixelSize;
     SDL_Rect pixel;
     SDL_Renderer* renderer;
     SDL_Window* window;

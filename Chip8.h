@@ -4,6 +4,10 @@
 class Chip8
 {
 public:
+
+    int height;
+    int width;
+
     // chip8 has 4k memory
     uint8_t memory[4096];
 

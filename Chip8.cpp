@@ -32,6 +32,8 @@ void Chip8::initialize()
     opcode = 0;
     I      = 0;
     sp     = 0;
+    width  = 64;
+    height = 32;
 
 
     // clear da memories

@@ -1,8 +1,13 @@
 #include "Application.h"
 #include <unistd.h>
 
-Application::Application(const char* file)
-{         
+#define MAX_PIXELSIZE;
+
+Application::Application(const char* file, int p=10)
+{   
+
+    pixelSize = p;
+
     // lets hope SDL is intialized correctly.
     if ( SDL_Init(SDL_INIT_EVERYTHING) < 0 )
 	{
@@ -14,8 +19,8 @@ Application::Application(const char* file)
         "CHIP-8 Emulator",
         SDL_WINDOWPOS_UNDEFINED, 
         SDL_WINDOWPOS_UNDEFINED,
-        WINDOW_WIDTH, 
-        WINDOW_HEIGHT, 
+        CHIP8_WIDTH*pixelSize, 
+        CHIP8_HEIGHT*pixelSize, 
         SDL_WINDOW_SHOWN
     );
 
@@ -30,8 +35,8 @@ Application::Application(const char* file)
     renderer = SDL_CreateRenderer(window, -1, 0);
 
     // pixel to draw on screen
-	pixel.w = PIXEL_SIZE;
-	pixel.h = PIXEL_SIZE;
+	pixel.w = pixelSize;
+	pixel.h = pixelSize;
 
     // create chip8 instance
 	chip8 = Chip8();
@@ -39,9 +44,11 @@ Application::Application(const char* file)
     // try and load rom
     if(!chip8.loadROM(file))
 	{
-		printf( "Couldn't load the ROM, try another one!\n");
+		printf( "[!]Couldn't load the ROM, try another one!\n");
 		exit(1);
 	}
+
+    printf("[*]Using pixel-size %d\n", pixelSize);
 
     // setup controls to be used
     controls[0]  = SDLK_x;
@@ -139,8 +146,8 @@ void Application::draw()
         int x = i % CHIP8_WIDTH;
         int y = i / CHIP8_WIDTH;
 
-        pixel.x = x * PIXEL_SIZE;
-        pixel.y = y * PIXEL_SIZE;
+        pixel.x = x * pixelSize;
+        pixel.y = y * pixelSize;
 
         // if set
         if(chip8.frameBuffer[i] != 0)
