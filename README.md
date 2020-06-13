@@ -8,3 +8,6 @@ To render graphics on screen i used SDL2, a cross platfom HAL library that gives
 
 The pixel size can be determined via the command line, aswell as the ROM to be loaded.
 
+# Usage
+
+./chip8 ROMNAME
