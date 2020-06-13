@@ -10,4 +10,4 @@ The pixel size can be determined via the command line, aswell as the ROM to be l
 
 # Usage
 
-./chip8 ROMNAME
+./Chip8 ROMNAME
